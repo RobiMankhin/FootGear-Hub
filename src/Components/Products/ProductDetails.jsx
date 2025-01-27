@@ -18,12 +18,20 @@ const ProductDetails = ({ selectedProduct, handleClose }) => {
   }
   const productInCart = cart.find((item) => item.id === selectedProduct.id);
 
+  useEffect(() => {
+    if (!productInCart) {
+      console.log("Product not found in the cart");
+      handleClose(); // Automatically close if product is no longer in the cart or quantity is 0
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productInCart, handleClose]);
+
+  if (!productInCart) return null;
+
   const handleDecreaseQnty = () => {
     if (productInCart.qnty > 1) {
       dispatch(decreaseQuantity(productInCart));
-    }
-    // Checking if quantity has dropped to 0 after decrement
-    if (productInCart.qnty == 1) {
+    } else {
       dispatch(removeFromCart(productInCart));
 
       handleClose(); // Closing modal when quantity is 0
@@ -36,11 +44,7 @@ const ProductDetails = ({ selectedProduct, handleClose }) => {
   };
 
   // Ensuring the selected product is up-to-date in case the quantity changes in the cart
-  useEffect(() => {
-    if (!productInCart || productInCart.qnty === 0) {
-      handleClose(); // Automatically close if product is no longer in the cart or quantity is 0
-    }
-  }, [cart, selectedProduct, handleClose, productInCart]);
+
   return (
     <div className="bg-slate-300 opacity-95 flex items-center justify-center fixed z-50 left-0 right-0 top-0 bottom-0">
       <div className="relative flex flex-col gap-2 rounded-lg justify-center font-bold  w-[300px] md:w-[500px] lg:w-[700px] p-2 border-[8px] bg-white">

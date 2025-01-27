@@ -56,13 +56,12 @@ const CreateFilters = createSlice({
       const cartItemIndex = state.cart.findIndex(
         (e) => e.id === action.payload.id
       );
-      if (cartItem) {
+      if (cartItem.qnty > 1) {
         cartItem.qnty -= 1;
-        state.totalAmount -= parseInt(cartItem.newPrice);
-      }
-      if (cartItem.qnty <= 0) {
-        state.totalAmount -= parseInt(cartItem.newPrice);
+        state.totalAmount -= parseFloat(cartItem.newPrice);
+      } else {
         state.cart.splice(cartItemIndex, 1);
+        state.totalAmount -= parseInt(cartItem.newPrice);
       }
     },
     setSearch: (state, action) => {
